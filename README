@@ -1,2 +1,3 @@
-Nothing to see here. This code investigates spurious wakeups from
-epoll on perf FDs. Requires root to run.
+Nothing interesting to see here. This code investigates wakeups from
+epoll on perf FDs. I wrote it for the purpose of debugging a Go perf
+API wrapper.

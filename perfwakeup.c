@@ -1,3 +1,26 @@
+/*
+This program investigates wakeups when polling perf event file descriptors.
+It is composed of two processes: a child process which calls getpid, and
+a parent which sets up perf monitoring and sampling for the child.
+
+The parent synchronizes with the child in such a way that it can be reasonably
+sure it will see a sample in the ring buffer on its first observation. After
+consuming said sample by advancing the ring buffer tail, the parent observes
+the ring buffer again, and sees head == tail, because only one event ever
+happens. It then polls the file descriptor, and immediately sees POLLIN,
+even though the ring buffer is currently empty.
+
+The general concept this program aims to investigate is the relationship
+between wakeup settings for a perf event (perf_event_attr.wakeup_events),
+and when POLLIN is indicated on the associated file descriptor. The program
+aims to confirm that for some given value of wakeup_events, POLLIN is
+indicated on the perf file descriptor regardless of how much of the ring
+the consumer has seen.
+
+There is no EAGAIN for perf file descriptors, which makes the situation
+slightly confusing. This program aims to eliminate some of that confusion.
+*/
+
 #define _GNU_SOURCE
 #include <fcntl.h>
 #include <stdlib.h>
