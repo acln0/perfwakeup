@@ -1,0 +1,2 @@
+Nothing to see here. This code investigates spurious wakeups from
+epoll on perf FDs. Requires root to run.
